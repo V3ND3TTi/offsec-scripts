@@ -1,5 +1,6 @@
 import socket
 import threading
+import time
 
 # Target to scan
 target = input("Enter target host (IP/Domain): ")
@@ -29,8 +30,9 @@ def scan_port(port):
 
 # Scan ports using threading for concurrency
 def start_scan():
-    threads = []
+    start_time = time.perf_counter() # High-precision timer start
 
+    threads = []
     for port in port_range:
         thread = threading.Thread(target=scan_port, args=(port,))
         threads.append(thread)
@@ -39,7 +41,8 @@ def start_scan():
     for thread in threads:
         thread.join()
 
-    print("Scanning completed.")
+    elapsed_time = (time.perf_counter() - start_time) * 1000 # Convert to ms
+    print(f"Scanning completed in {elapsed_time: .2f} ms.")
 
 if __name__=="__main__":
     start_scan()
